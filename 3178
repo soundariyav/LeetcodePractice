@@ -1,0 +1,25 @@
+class Solution {
+    public int numberOfChild(int n, int k) {
+      int d = 1;
+      int cp=0;
+        int np=0;
+      while(k>0)
+      {
+           np = cp+d;
+          System.out.println(np);
+          if(np==n-1)
+          {
+              d = -1;
+          }
+          if(np==0)
+          {
+              d= 1;
+          }
+          cp = np;
+          k--;
+      }
+    return np;
+    
+        
+    }
+}
