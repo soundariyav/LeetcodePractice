@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int loner = 0;
+        for(int shift = 0;shift<32;shift++){
+             int bs=0;
+             for(auto num:nums){
+                bs+= (num>>shift) &1;
+             }
+             int lb = bs%3;
+             loner = loner | (lb<<shift);
+        }
+        return loner;
+    }
+};
