@@ -1,0 +1,58 @@
+class Solution {
+public:
+    vector<vector<pair<int,int>>>adj;
+    int gs = 1e9;
+    int t = 0;
+    unordered_set<int>st;
+    int minCost(int n, vector<vector<int>>& e) {
+        adj = vector<vector<pair<int,int>>>(n);
+        t = n-1;
+        for(int i=0;i<e.size();i++){
+            int score = e[i][2];
+            int cost = 2*score;
+            adj[e[i][0]].push_back({e[i][1],score});
+            adj[e[i][1]].push_back({e[i][0],cost});
+        }   
+        priority_queue<pair<int,int>, vector<pair<int,int>>, greater<>> pq;
+        pq.push({0,0});
+        vector<int>d(n,INT_MAX);
+        d[0] = 0;
+        while(!pq.empty()){
+            auto [cost,node]= pq.top();
+            pq.pop();
+            if(cost>d[node])continue;
+            for(auto [x,y]: adj[node]){
+                int score = cost+ y;
+                if(score< d[x]){
+                    d[x] = score;
+                    pq.push({score,x});
+                }
+            }
+        }
+        return d[n-1]==INT_MAX ? -1 : d[n-1];
+
+    }
+    void dfs(int node, int cost){
+        
+        if(node==t){
+            gs = min(cost,gs);
+            return;
+        }
+        
+        if(st.find(node)!=st.end()){
+            return;
+        }
+        st.insert(node);
+        for(auto [x,y]: adj[node]){
+             int score = y;
+             int c = cost+score;
+             if(c>=gs)continue;
+             dfs(x, c);
+
+        }
+        st.erase(node);
+        return;
+    }
+
+         
+};
