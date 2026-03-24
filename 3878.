@@ -1,0 +1,43 @@
+class Solution {
+public:
+    long long countGoodSubarrays(vector<int>& nums) {
+         int n = nums.size();
+         vector<int>prev_one(31,-1);
+         vector<int>next_one(31,n);
+         vector<int>l(n,0);
+         vector<int>r(n,n-1);
+         // first we will check the left range till which it can expand;
+         for(int i=0;i<nums.size();i++){
+             for(int bit=0;bit<31;bit++){
+                if((nums[i] & (1<<bit))==0){
+                    l[i] = max(l[i], prev_one[bit]+1);
+                }
+                else{
+                    prev_one[bit]= i;
+                }
+             }
+         }
+         for(int i=n-1;i>=0;i--){
+             for(int bit=0;bit<31;bit++){
+                if((nums[i] & (1<<bit))==0){
+                    r[i] = min(r[i], next_one[bit]-1);
+                }
+                else{
+                    next_one[bit]= i;
+                }
+             }
+         }
+         long long ans = 0;
+         unordered_map<int,int>mp;
+         for(int i=0;i<n;i++){
+            int st = l[i];
+            int end = r[i];
+            if(mp.count(nums[i])){
+                st = max(st, mp[nums[i]]+1);
+            }
+            mp[nums[i]]= i;
+            ans+= (1LL) * (i-st+1) * (end-i+1);
+         }
+         return ans;
+    }
+};
