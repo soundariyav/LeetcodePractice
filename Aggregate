@@ -1,0 +1,44 @@
+class Solution {
+public:
+    vector<vector<int>> aggregateTimeSeries(vector<vector<int>>& series1, vector<vector<int>>& series2) {
+          vector<vector<int>>ans;
+          unordered_set<int>st;
+          for(int i=0;i<series1.size();i++){
+                // series1 we will finish
+                auto t = series1[i][0];
+                auto v = series1[i][1];
+                int sum = v;
+                auto it = lower_bound(series2.begin(),series2.end(),t, [](const vector<int>r,int st){
+                    return r[0]<st;
+                });
+                if(it!=series2.end()){
+                   int idx = it - series2.begin();
+                   //cout<<idx<< " for " << t<<endl;
+                   sum+= series2[idx][1];
+                }
+                ans.push_back({t,sum});
+                st.insert(t);
+          }
+          for(int i=0;i<series2.size();i++){
+                // series1 we will finish
+                auto t = series2[i][0];
+                if(st.find(t)!=st.end()){
+                    continue;
+                }
+                auto v = series2[i][1];
+                int sum = v;
+                auto it = lower_bound(series1.begin(),series1.end(),t, [](const vector<int>r,int st){
+                    return r[0]<st;
+                });
+                if(it!=series1.end()){
+                   int idx = it - series1.begin();
+                   //cout<<idx<< " for " << t<<endl;
+                   sum+= series1[idx][1];
+                }
+                ans.push_back({t,sum});
+                st.insert(t);
+          }
+          sort(ans.begin(),ans.end());
+          return ans;
+    }
+};
